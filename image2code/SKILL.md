@@ -51,7 +51,7 @@ Required outputs:
 - `demo-pages/`: generated demo-page images or later HTML demo artifacts.
 - `implementation-screenshots/`: after-code screenshots used to verify image-to-code fidelity.
 
-Read `references/pack-schema.md` before writing or auditing the package. Read `references/design-model.md` before writing `design-model.yaml` or `02-design-system.md`.
+Read `references/pack-schema.md` before writing or auditing the package. Read `references/design-model.md` before writing `design-model.yaml` or `02-design-system.md`. Read `references/visual-quality-preflight.md` before final image generation and before declaring a pack ready.
 After adding or renaming generated images/screenshots, run:
 
 ```bash
@@ -94,6 +94,7 @@ Use `--strict-relative` when the target repository forbids local absolute paths 
    - If no UI spec exists, generate `ui-spec.md` from the repository and screenshots before image generation. Include current style, layout rules, tokens, component conventions, density, accessibility, responsive behavior, and known inconsistencies.
    - Default style policy: preserve the current UI specification and visual language unless the user explicitly asks to change style.
    - If the user explicitly asks to change style, record the new style direction, what must remain compatible, and which old rules are intentionally replaced.
+   - Write a one-line design read and visual dials (`layout_variance`, `motion_intensity`, `visual_density`) in `00-brief.md` and `design-model.yaml`. These calibrate image prompts and prevent mismatching a dense product screen with a marketing-site treatment.
    - Write `design-model.yaml` as the structured source for the pack. Record whether each important component decision is `observed`, `derived`, or `new`, with evidence from screenshots, source files, or explicit user direction.
 
 3. **Set the adjustment level**
@@ -111,6 +112,8 @@ Use `--strict-relative` when the target repository forbids local absolute paths 
    - Use the Codex image generation tool for bitmap outputs: design overview board, design-system sheet, each major screen, key states, and demo-page images.
    - Include the style policy and adjustment level in every image prompt.
    - Use `design-model.yaml` for exact tokens, component provenance, icon rules, and screen mappings. Do not invent visual rules in prompts that are absent from the model or the markdown spec.
+   - Generate separate, readable target images for important screens, sections, states, and device/orientation variants. Do not compress many implementation targets into one unreadable board.
+   - If typography, buttons, spacing, or component details are unclear, generate a fresh detail or section-specific image instead of cropping a previous overview image.
    - Generate images with realistic product data and the target viewport/device, not generic marketing art.
    - Keep image text short and also record all precise text/tokens in markdown because generated text may be imperfect.
    - If the image tool does not expose filesystem paths, do not pretend files were saved. Save available outputs through the app if possible, or ask the user to attach/export them before finalizing the pack.
@@ -119,6 +122,7 @@ Use `--strict-relative` when the target repository forbids local absolute paths 
    - Run at least two critique passes unless the user explicitly asks for a quick draft.
    - Score each pass against `references/design-rubric.md`.
    - Regenerate weak screens or targeted details. Keep rejected versions in `reviews/` when available.
+   - Run the checks in `references/visual-quality-preflight.md`: consistency locks, first-view/platform discipline, mobile/native constraints, and redesign preservation boundaries.
    - Stop only when the design is coherent across screens, technically implementable, and the remaining tradeoffs are written down.
 
 7. **Write the implementation contract**
@@ -158,13 +162,14 @@ When revising a previous pack:
 Before declaring the pack complete:
 
 - Every generated final image has a matching row in `manifest.json`.
-- `design-model.yaml` exists, is referenced by `manifest.json`, and names the style policy, adjustment level, token set, component provenance, screen mappings, and implementation constraints.
+- `design-model.yaml` exists, is referenced by `manifest.json`, and names the design read, visual dials, style policy, adjustment level, token set, component provenance, screen mappings, and implementation constraints.
 - `ui-spec.md` exists and states whether the design preserves the original style or intentionally changes it.
 - `00-brief.md` states the adjustment level and why that level fits the request.
 - Every important current page or intended new page has a spec in `03-screen-specs.md`.
 - The pack includes a textual token table. Include a design-system/tokens image when the user requested a full visual system or the implementation needs one; otherwise explain the omission in `05-review-log.md`.
 - The review log explains why the final direction won over alternatives.
 - Existing-project packs include codebase findings and current UI screenshots or a clear reason they could not be captured.
+- Existing-project packs list preservation boundaries for routes, navigation labels, forms, analytics-sensitive actions, legal copy, accessibility behavior, and brand marks.
 - The handoff prompt is self-contained and points to the pack path. Use absolute paths by default; use relative paths when the target repository's documentation rules forbid local absolute paths.
 - `scripts/audit_design_pack.py` passes, using `--strict-relative` when the project requires relative documentation links.
 - Implementation work records reference screenshots, actual screenshots, observed differences, and final decisions in `06-implementation-plan.md`.
@@ -178,4 +183,5 @@ Before declaring the pack complete:
 - `references/existing-project-playbook.md`: repository discovery, screen inventory, and screenshot capture guidance for existing apps.
 - `references/image-generation-playbook.md`: prompt templates and review loops for generated UI images.
 - `references/design-rubric.md`: visual, product, and implementation scoring criteria.
+- `references/visual-quality-preflight.md`: design read, visual dials, image granularity, consistency locks, and final preflight checks.
 - `references/implementation-handoff.md`: prompt template for one-to-one implementation from a pack.

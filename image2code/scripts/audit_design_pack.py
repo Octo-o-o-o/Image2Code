@@ -41,13 +41,13 @@ IMAGE_EXTENSIONS = {".gif", ".jpg", ".jpeg", ".png", ".webp"}
 
 REQUIRED_HEADINGS = {
     "ui-spec.md": ["## Style Policy", "## Adjustment Level"],
-    "00-brief.md": ["## Goals", "## Constraints", "## Adjustment Level"],
+    "00-brief.md": ["## Design Read", "## Goals", "## Constraints", "## Adjustment Level", "## Visual Dials"],
     "01-current-state.md": ["## Inputs", "## Repository Findings", "## UI Problems"],
     "02-design-system.md": ["## Color Tokens", "## Typography", "## Components"],
     "03-screen-specs.md": ["## Screen Inventory"],
     "04-image-prompts.md": ["## Prompt Log"],
-    "05-review-log.md": ["## Round 1", "## Decisions"],
-    "06-implementation-plan.md": ["## Code Mapping", "## Phases", "## Verification Targets"],
+    "05-review-log.md": ["## Round 1", "## Decisions", "## Visual Quality Preflight"],
+    "06-implementation-plan.md": ["## Code Mapping", "## Phases", "## Verification Targets", "## Preservation Boundaries"],
 }
 
 PLACEHOLDER_PATTERNS = [
@@ -62,8 +62,10 @@ PLACEHOLDER_PATTERNS = [
 ABSOLUTE_PATH_PATTERN = re.compile(r"(?<!\w)/(?:Users|home|tmp|var|private)/[^\s)`>]+")
 
 REQUIRED_DESIGN_MODEL_KEYS = [
+    "design_read:",
     "style_policy:",
     "adjustment_level:",
+    "visual_dials:",
     "source_provenance:",
     "visual_direction:",
     "tokens:",
@@ -166,6 +168,8 @@ def main() -> None:
             warnings.append("design-model.yaml should record component source values")
         if re.search(r"level:\s*null\b", design_model_text):
             warnings.append("design-model.yaml adjustment level is unset")
+        if re.search(r"(layout_variance|motion_intensity|visual_density):\s*null\b", design_model_text):
+            warnings.append("design-model.yaml visual dials are unset")
         if re.search(r"source:\s*[\"']{2}", design_model_text):
             warnings.append("design-model.yaml contains empty component source values")
         if re.search(r"summary:\s*[\"']{2}", design_model_text):

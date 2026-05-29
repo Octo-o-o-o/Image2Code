@@ -47,6 +47,12 @@ For old projects, include shared shell pieces separately:
 
 ## Design Constraints
 
+Classify the redesign before proposing images:
+
+- Preserve: modernize style, spacing, states, and component polish while keeping brand language, navigation, and workflows stable.
+- Refresh: improve component language and hierarchy while preserving information architecture and product model.
+- Overhaul: change the broad visual language or shell only when the user explicitly requests it.
+
 Preserve:
 
 - Product vocabulary and task flow.
@@ -54,6 +60,7 @@ Preserve:
 - Data density expected by current users.
 - Accessibility, keyboard/pointer/touch, and window-size/orientation behavior.
 - Platform conventions for the target surface, including desktop, web, iPadOS, iOS, Android, or Electron.
+- Routes, deep links, primary navigation labels, analytics-sensitive action labels, form field names/order, legal/consent/privacy copy, and brand marks unless the user explicitly approves changing them.
 
 Challenge:
 

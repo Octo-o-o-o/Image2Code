@@ -101,6 +101,7 @@ def main() -> None:
     require(SKILL / "scripts/sync_manifest.py")
     require(SKILL / "scripts/audit_design_pack.py")
     require(SKILL / "scripts/collect_frontend_context.py")
+    require(SKILL / "references/visual-quality-preflight.md")
     validate_metadata()
     run([sys.executable, "-m", "py_compile", *map(str, sorted((SKILL / "scripts").glob("*.py")))])
     validate_pack_scripts()

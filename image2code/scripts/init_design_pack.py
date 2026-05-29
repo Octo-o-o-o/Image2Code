@@ -75,6 +75,13 @@ DOC_TEMPLATES = {
 - Target platform:
 - Target users:
 
+## Design Read
+
+- Reading this as:
+- Audience:
+- Visual language:
+- Quiet constraints:
+
 ## Goals
 
 -
@@ -98,6 +105,13 @@ DOC_TEMPLATES = {
 ## Adjustment Level
 
 - Level:
+- Rationale:
+
+## Visual Dials
+
+- Layout variance:
+- Motion intensity:
+- Visual density:
 - Rationale:
 
 ## Assumptions And Open Questions
@@ -198,6 +212,14 @@ DOC_TEMPLATES = {
 
 -
 
+## Visual Quality Preflight
+
+- Design read and dials filled:
+- Key screens/sections have separate readable target images:
+- Unclear details regenerated instead of cropped:
+- Consistency locks checked:
+- First-view/mobile/platform rules checked:
+
 ## Rejected Ideas
 
 -
@@ -226,17 +248,36 @@ DOC_TEMPLATES = {
 ## Risks
 
 -
+
+## Preservation Boundaries
+
+- Routes/deep links:
+- Navigation labels:
+- Forms/validation/analytics-sensitive actions:
+- Legal/consent/privacy copy:
+- Accessibility behavior:
+- Brand marks:
 """,
 }
 
 DESIGN_MODEL_TEMPLATE = """project: "{project}"
 mode: "{mode}"
 platform: "{platform}"
+design_read:
+  surface_type: ""
+  audience: ""
+  visual_language: ""
+  constraints: []
 style_policy:
   preserve_existing: true
   requested_change: ""
 adjustment_level:
   level: null
+  rationale: ""
+visual_dials:
+  layout_variance: null
+  motion_intensity: null
+  visual_density: null
   rationale: ""
 source_provenance:
   repo_context: ""
@@ -444,6 +485,8 @@ Then design the implementation plan in this order:
 Before changing production code, create a small demo/prototype first when the design direction is broad or ambiguous. Use the fastest faithful surface for this project: HTML/CSS for web, SwiftUI previews or simulator-only scaffolding for iOS, or equivalent native previews. Screenshot it, compare it against the target design images, and revise the plan if the demo exposes mismatches.
 
 Implement the refactor in the existing project style. Do not introduce a new UI framework unless it is already used by the project or I explicitly approve it. Keep behavior intact unless the design pack explicitly requests a behavior change.
+
+Preserve routes, primary navigation labels, form semantics, analytics-sensitive action labels, legal or consent copy, accessibility behavior, and brand marks unless the design pack explicitly approves changing them.
 
 After implementation, run the app locally with mock data. Capture every changed screen on the target platform into implementation-screenshots/ and compare against the design pack. If there are mismatches, decide whether to update code, update the implementation plan, or keep the existing behavior with a written reason. Continue until the screenshots match the design intent closely.
 

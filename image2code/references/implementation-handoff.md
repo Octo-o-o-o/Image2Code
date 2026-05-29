@@ -4,7 +4,7 @@ Use this template for `handoff-prompt.md`. Replace bracketed placeholders with a
 
 ```text
 I have a complete image-based UI design pack at [ABSOLUTE_PACK_PATH]
-Please read design-model.yaml, every markdown file, and every image in that folder before editing code. Pay special attention to ui-spec.md, the style policy, the adjustment level, component provenance, and implementation constraints.
+Please read design-model.yaml, every markdown file, and every image in that folder before editing code. Pay special attention to ui-spec.md, the design read, visual dials, style policy, adjustment level, component provenance, preservation boundaries, and implementation constraints.
 
 Target project: [ABSOLUTE_REPO_PATH]
 Target platform: [PLATFORM_AND_VIEWPORTS]
@@ -41,6 +41,7 @@ The generated handoff prompt must include:
 - Absolute repo path when known.
 - Instruction to read images and markdown first.
 - Instruction to read design-model.yaml as the structured source for tokens, component provenance, screen mappings, and constraints.
+- Instruction to preserve routes, navigation labels, form semantics, analytics-sensitive actions, legal copy, accessibility behavior, and brand marks unless the pack explicitly approves changes.
 - Browser/simulator/device screenshot comparison workflow.
 - Mock data instruction.
 - Demo-first instruction when appropriate.

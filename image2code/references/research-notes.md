@@ -10,6 +10,7 @@ This skill is not a replacement for a design-to-code product. It creates a struc
 - Builder.io Visual Copilot: converts Figma designs to framework-specific code and emphasizes component mapping and style preferences. Lesson: implementation quality improves when the handoff maps visual design to existing components/framework constraints. Source: https://www.builder.io/blog/figma-to-code-visual-copilot
 - Figma Make: turns designs/prompts into functional prototypes and supports using design library context. Lesson: product style context and design-system rules should be first-class inputs, not afterthoughts. Source: https://www.figma.com/make/
 - `dominikmartn/hue`: generates reusable brand design-language skills from URLs, screenshots, or descriptions, with structured design models, token/component documentation, and HTML previews. Lesson: Image2Code should borrow structured design provenance and preview discipline, but keep its output project-specific rather than becoming a brand-skill generator. Source: https://github.com/dominikmartn/hue
+- `Leonxlnx/taste-skill`: a family of anti-generic frontend, image-generation, redesign, and output-completeness skills. Lesson: borrow compact mechanisms that improve fidelity, including design-read calibration, visual dials, per-section/per-screen image granularity, fresh detail regeneration, preservation boundaries, and final preflight checks; avoid importing long aesthetic bans wholesale because Image2Code must stay platform- and product-neutral. Source: https://github.com/Leonxlnx/taste-skill
 
 ## Relevant Research
 
@@ -26,4 +27,5 @@ This skill is not a replacement for a design-to-code product. It creates a struc
 - Segment large screenshots into implementation regions before coding.
 - Keep prompts and review logs for traceability.
 - Keep a structured design model so token, component, icon, and screen decisions have provenance instead of living only in prose or pixels.
+- Make generated images large enough to inspect; use fresh detail images when a target is unclear instead of guessing from compressed boards or crops.
 - Validate implementation by rendering the app, saving after-screenshots, and comparing them to the pack.

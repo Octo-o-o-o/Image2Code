@@ -9,7 +9,7 @@ The skill itself lives in [`image2code/`](./image2code/). The repository root co
 - Creates a structured pack under `docs/image2code/<timestamp>-<project>/`.
 - Captures repository UI context before design or implementation work.
 - Preserves the existing product style unless the user explicitly requests a style change.
-- Records a structured `design-model.yaml` so tokens, component provenance, icon choices, screen mappings, and implementation constraints stay auditable.
+- Records a structured `design-model.yaml` so design reads, visual dials, tokens, component provenance, icon choices, screen mappings, and implementation constraints stay auditable.
 - Supports web, desktop, mobile, iOS, Android, and other native app surfaces.
 - Records design prompts, review rounds, tokens, screen specs, implementation plan, and screenshot evidence.
 - Guides one-to-one implementation with before/after screenshots and visual-difference review.

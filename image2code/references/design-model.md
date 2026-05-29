@@ -20,12 +20,22 @@ For implementation mode, read `design-model.yaml` before editing code. Treat it 
 project: "Project Name"
 mode: "redesign"
 platform: "desktop"
+design_read:
+  surface_type: ""
+  audience: ""
+  visual_language: ""
+  constraints: []
 style_policy:
   preserve_existing: true
   requested_change: ""
 adjustment_level:
   level: 2
   rationale: "Component refresh while preserving navigation and workflows."
+visual_dials:
+  layout_variance: 5
+  motion_intensity: 3
+  visual_density: 6
+  rationale: "Operational screen: moderate layout variation, restrained motion, dense task surface."
 source_provenance:
   repo_context: "01-current-state.repo-context.md"
   screenshots: []
@@ -50,6 +60,8 @@ implementation_constraints: []
 ```
 
 Use valid YAML. Keep values concrete: hex colors, pixel sizes, line-height values, component heights, density rules, breakpoints, file paths, and screen names.
+
+Read `references/visual-quality-preflight.md` before filling `design_read` and `visual_dials`. These fields calibrate image prompts, critique, and implementation tradeoffs so a dense app does not receive a marketing-site treatment and a landing page does not collapse into dashboard chrome.
 
 ## Provenance Rules
 

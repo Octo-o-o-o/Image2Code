@@ -7,11 +7,12 @@ Use this reference when implementing a generated pack or when the user asks for 
 1. Read `design-model.yaml`, the markdown spec, and every target image before editing code.
 2. Capture the current implementation with representative data.
 3. Segment each target screen into regions: shell, navigation, toolbars, repeated lists/cards, content panels, modals, empty states, and responsive variants.
-4. Map each region to existing files, components, tokens, and data sources.
-5. Implement the smallest layer that makes the next screenshot visibly closer: tokens, shared layout, shared components, page regions, then state polish.
-6. Render the app and capture after-screenshots into `implementation-screenshots/`.
-7. Compare target, before, and after screenshots. Record mismatches and decisions in `06-implementation-plan.md`.
-8. Iterate until remaining differences are either fixed or explicitly accepted with a reason.
+4. If a target image is too compressed to inspect, stop and request or generate a fresh detail image rather than guessing from a crop.
+5. Map each region to existing files, components, tokens, and data sources.
+6. Implement the smallest layer that makes the next screenshot visibly closer: tokens, shared layout, shared components, page regions, then state polish.
+7. Render the app and capture after-screenshots into `implementation-screenshots/`.
+8. Compare target, before, and after screenshots. Record mismatches and decisions in `06-implementation-plan.md`.
+9. Iterate until remaining differences are either fixed or explicitly accepted with a reason.
 
 ## Segmentation Checklist
 

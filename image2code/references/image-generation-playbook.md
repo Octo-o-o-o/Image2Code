@@ -9,9 +9,13 @@ For a complete design pack, generate the images that match the target platform:
 - Overview board: product direction, core screens, design principles.
 - Design-system board: tokens, components, spacing, states.
 - Canonical page images: one image per major screen.
+- Section-level images for website/landing-page packs when section details need to be implemented separately.
 - State sheets: empty, loading, error, dense data, hover/selected, modal/drawer.
 - Responsive/device/orientation variants when they matter.
+- Detail/extraction images when typography, buttons, spacing, icons, or component internals are too small to inspect.
 - Demo-page image: a stitched view showing how the experience feels as a flow.
+
+Prefer more readable implementation-target images over one compressed board. Overview boards help direction, but final code should not depend on tiny text or tiny components in a collage.
 
 ## Prompt Structure
 
@@ -37,6 +41,15 @@ For existing UI redesigns, include what must remain recognizable: route names, p
 If the user did not explicitly ask for a new style, prompts must inherit the current `ui-spec.md` visual language. Do not use unrelated trends, palettes, or decorative systems just because the user asked for a redesign.
 
 When `design-model.yaml` exists, prompts must use it as the exact source for tokens, component provenance, icon rules, and screen mappings. If a prompt needs a visual rule not yet in the model, update the model and markdown spec first.
+
+## Granularity Rules
+
+- One important app screen gets its own large image.
+- One important website section gets its own large horizontal image when section fidelity matters.
+- One native mobile screen gets its own device/orientation image when it belongs to a flow.
+- Complex modals, tables, pricing blocks, forms, onboarding screens, and dense states get separate detail/state images.
+
+Do not crop a region out of an old overview image and promote it to source-of-truth. If a detail matters and is unclear, regenerate a fresh standalone image that preserves the same design model.
 
 ## Iteration Prompts
 

@@ -71,6 +71,7 @@ Use relative paths from the pack root.
 `design-model.yaml`:
 
 - Structured source of truth for style policy, adjustment level, design provenance, tokens, components, iconography, optional hero/stage treatment, screen mapping, and implementation constraints.
+- Includes `design_read` and `visual_dials` so image generation and implementation are calibrated to the surface type, audience, motion needs, and density.
 - Important components use `source: observed|derived|new` with evidence and rationale.
 - Token values match `02-design-system.md`; screen entries match `03-screen-specs.md`.
 - Icon fallback limitations are documented when the original icon set is proprietary or unavailable.
@@ -79,6 +80,7 @@ Use relative paths from the pack root.
 `00-brief.md`:
 
 - Product purpose, users, platform, technical stack if known.
+- One-line design read and visual dials.
 - Goals and non-goals.
 - Page inventory.
 - Assumptions and open questions.
@@ -129,6 +131,7 @@ Use relative paths from the pack root.
 - Scores from `design-rubric.md`.
 - Issues found, action taken, final decision.
 - Rejected ideas and why.
+- Visual-quality preflight decisions from `references/visual-quality-preflight.md`.
 
 `06-implementation-plan.md`:
 
@@ -137,6 +140,7 @@ Use relative paths from the pack root.
 - Screen and region segmentation for complex targets.
 - Verification plan with browser, simulator, or device screenshot targets.
 - Reference design image, current screenshot, implementation screenshot, observed difference, decision, and status for each target.
+- Preservation boundaries for routes, navigation labels, form semantics, legal copy, accessibility behavior, analytics-sensitive actions, and brand marks.
 - Risks and fallback decisions.
 
 `handoff-prompt.md`:
