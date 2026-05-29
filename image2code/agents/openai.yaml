@@ -1,0 +1,4 @@
+interface:
+  display_name: "Image2Code"
+  short_description: "Image-led design-to-code packs with screenshot verification"
+  default_prompt: "Use $image2code to create a complete image-based redesign pack for this app and prepare an implementation handoff."
