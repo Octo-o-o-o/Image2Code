@@ -30,6 +30,8 @@ python3 /path/to/image2code/scripts/init_design_pack.py \
   --repo /absolute/project/path
 ```
 
+If generated documentation must avoid local absolute paths, pass `--relative-paths` or explicit `--repo-label` and `--pack-label`.
+
 Required outputs:
 
 - `manifest.json`: canonical file list, project metadata, and status.
@@ -79,6 +81,7 @@ Use `--strict-relative` when the target repository forbids local absolute paths 
      ```
 
    - If repository docs prohibit absolute paths, pass `--repo-label` with a relative label such as `../../..`.
+   - When creating the pack itself for such repositories, pass `--relative-paths` to `init_design_pack.py` so `manifest.json` and `handoff-prompt.md` are compatible with strict-relative audits.
    - If the repository has noisy scratch, vendor, or generated folders, pass repeatable `--exclude` values so the report focuses on the shipping UI.
    - If a local app can run, capture each important screen with mock or seeded data before designing. Use browser screenshots for web/desktop surfaces, simulator/device screenshots for native mobile/tablet apps, and record device, OS, orientation, and data mode.
    - For a new project, infer missing details conservatively and write assumptions in `00-brief.md`.

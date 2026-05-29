@@ -270,6 +270,29 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--slug", help="Optional folder slug")
     parser.add_argument("--repo", help="Absolute target repository path")
+    parser.add_argument(
+        "--repo-label",
+        help=(
+            "Repository label to write into markdown/manifest. Use a relative "
+            "label such as ../../.. or . when generated docs must avoid local "
+            "absolute paths."
+        ),
+    )
+    parser.add_argument(
+        "--pack-label",
+        help=(
+            "Design pack label to write into handoff-prompt.md. Defaults to the "
+            "absolute pack path unless --relative-paths can compute a relative path."
+        ),
+    )
+    parser.add_argument(
+        "--relative-paths",
+        action="store_true",
+        help=(
+            "Write repo and pack labels as relative paths when possible. This is "
+            "useful for repositories that forbid local absolute paths in docs."
+        ),
+    )
     parser.add_argument("--status", default="draft", help="Initial manifest status")
     parser.add_argument(
         "--timestamp",
@@ -304,13 +327,47 @@ def capture_guidance(platform: str) -> str:
     )
 
 
-def handoff_prompt(pack_dir: Path, repo: str | None, platform: str) -> str:
-    repo_path = str(Path(repo).expanduser().resolve()) if repo else "[ABSOLUTE_REPO_PATH]"
+def path_label(path: Path, base: Path | None = None) -> str:
+    if base:
+        try:
+            return str(path.relative_to(base)) or "."
+        except ValueError:
+            pass
+    return str(path)
+
+
+def repo_label(repo: str | None, explicit_label: str | None, relative_paths: bool) -> str:
+    if explicit_label:
+        return explicit_label
+    if not repo:
+        return "[ABSOLUTE_REPO_PATH]"
+    repo_path = Path(repo).expanduser().resolve()
+    return "." if relative_paths else str(repo_path)
+
+
+def pack_label(
+    pack_dir: Path,
+    repo: str | None,
+    explicit_label: str | None,
+    relative_paths: bool,
+) -> str:
+    if explicit_label:
+        return explicit_label
+    if relative_paths and repo:
+        return path_label(pack_dir, Path(repo).expanduser().resolve())
+    return str(pack_dir)
+
+
+def handoff_prompt(
+    platform: str,
+    repo_display: str,
+    pack_display: str,
+) -> str:
     return f"""# Implementation Handoff Prompt
 
-I have a complete image-based UI design pack at {pack_dir}. Please read every markdown file and every image in that folder before editing code.
+I have a complete image-based UI design pack at {pack_display}. Please read every markdown file and every image in that folder before editing code.
 
-Target project: {repo_path}
+Target project: {repo_display}
 Target platform: {platform}
 Goal: implement the design pack as a careful UI refactor while preserving existing product behavior.
 
@@ -331,7 +388,7 @@ Implement the refactor in the existing project style. Do not introduce a new UI 
 
 After implementation, run the app locally with mock data. Capture every changed screen on the target platform into implementation-screenshots/ and compare against the design pack. If there are mismatches, decide whether to update code, update the implementation plan, or keep the existing behavior with a written reason. Continue until the screenshots match the design intent closely.
 
-When done, update {pack_dir}/06-implementation-plan.md with what was implemented, verification screenshots, remaining differences, and follow-up risks. Run sync_manifest.py so screenshot evidence is recorded. Commit and push only if I explicitly ask for that in this task.
+When done, update {pack_display}/06-implementation-plan.md with what was implemented, verification screenshots, remaining differences, and follow-up risks. Run sync_manifest.py so screenshot evidence is recorded. Commit and push only if I explicitly ask for that in this task.
 """
 
 
@@ -346,6 +403,8 @@ def main() -> None:
         if args.output
         else unique_pack_dir(root, timestamp, slug)
     )
+    repo_display = repo_label(args.repo, args.repo_label, args.relative_paths)
+    pack_display = pack_label(pack_dir, args.repo, args.pack_label, args.relative_paths)
     pack_dir.mkdir(parents=True, exist_ok=False)
 
     for dirname in [
@@ -364,7 +423,7 @@ def main() -> None:
     for filename, content in DOC_TEMPLATES.items():
         (pack_dir / filename).write_text(TEMPLATE_NOTE + content, encoding="utf-8")
     (pack_dir / "handoff-prompt.md").write_text(
-        handoff_prompt(pack_dir, args.repo, args.platform),
+        handoff_prompt(args.platform, repo_display, pack_display),
         encoding="utf-8",
     )
 
@@ -376,7 +435,7 @@ def main() -> None:
         "status": args.status,
         "viewport_targets": viewports,
         "source_context": {
-            "repo": str(Path(args.repo).expanduser().resolve()) if args.repo else "",
+            "repo": repo_display if args.repo or args.repo_label else "",
             "input_images": [],
             "user_screenshots": [],
             "current_screenshots": [],
@@ -386,7 +445,7 @@ def main() -> None:
         "final_images": [],
         "review_rounds": [],
         "implementation": {
-            "target_repo": str(Path(args.repo).expanduser().resolve()) if args.repo else "",
+            "target_repo": repo_display if args.repo or args.repo_label else "",
             "handoff_prompt": "handoff-prompt.md",
         },
     }

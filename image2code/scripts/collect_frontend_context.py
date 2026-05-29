@@ -173,8 +173,12 @@ def should_skip(path: Path) -> bool:
 
 def iter_files(root: Path) -> Iterable[Path]:
     for current, dirs, files in os.walk(root):
-        dirs[:] = [d for d in dirs if d not in SKIP_DIRS and not d.startswith(".")]
         current_path = Path(current)
+        dirs[:] = [
+            directory
+            for directory in dirs
+            if not should_skip(current_path / directory)
+        ]
         for file_name in files:
             path = current_path / file_name
             if should_skip(path):
