@@ -4,7 +4,7 @@ Use this reference when implementing a generated pack or when the user asks for 
 
 ## Core Loop
 
-1. Read the markdown spec and every target image before editing code.
+1. Read `design-model.yaml`, the markdown spec, and every target image before editing code.
 2. Capture the current implementation with representative data.
 3. Segment each target screen into regions: shell, navigation, toolbars, repeated lists/cards, content panels, modals, empty states, and responsive variants.
 4. Map each region to existing files, components, tokens, and data sources.
@@ -38,3 +38,4 @@ Run `scripts/sync_manifest.py` after adding screenshots so `manifest.json` recor
 - Misarrangement: components exist but their order, alignment, grouping, or responsive behavior does not match the target.
 - Style drift: implementation introduces a new design language not present in the pack or existing app.
 - Behavior drift: visual work changes navigation, persistence, validation, or data semantics without explicit approval.
+- Model drift: code follows a target image while ignoring the structured tokens, component provenance, or implementation constraints in `design-model.yaml`.

@@ -35,6 +35,7 @@ If generated documentation must avoid local absolute paths, pass `--relative-pat
 Required outputs:
 
 - `manifest.json`: canonical file list, project metadata, and status.
+- `design-model.yaml`: structured source of truth for style policy, provenance, tokens, components, iconography, screen mappings, and implementation constraints.
 - `ui-spec.md`: current UI specification; copy/summarize an existing project UI spec or generate one from the project before designing.
 - `00-brief.md`: goal, product context, audience, constraints, screens, and assumptions.
 - `01-current-state.md`: current screenshots, repository/design-system notes, and UI problems.
@@ -50,7 +51,7 @@ Required outputs:
 - `demo-pages/`: generated demo-page images or later HTML demo artifacts.
 - `implementation-screenshots/`: after-code screenshots used to verify image-to-code fidelity.
 
-Read `references/pack-schema.md` before writing or auditing the package.
+Read `references/pack-schema.md` before writing or auditing the package. Read `references/design-model.md` before writing `design-model.yaml` or `02-design-system.md`.
 After adding or renaming generated images/screenshots, run:
 
 ```bash
@@ -93,6 +94,7 @@ Use `--strict-relative` when the target repository forbids local absolute paths 
    - If no UI spec exists, generate `ui-spec.md` from the repository and screenshots before image generation. Include current style, layout rules, tokens, component conventions, density, accessibility, responsive behavior, and known inconsistencies.
    - Default style policy: preserve the current UI specification and visual language unless the user explicitly asks to change style.
    - If the user explicitly asks to change style, record the new style direction, what must remain compatible, and which old rules are intentionally replaced.
+   - Write `design-model.yaml` as the structured source for the pack. Record whether each important component decision is `observed`, `derived`, or `new`, with evidence from screenshots, source files, or explicit user direction.
 
 3. **Set the adjustment level**
    - Level 1, polish: smallest possible detail improvements, spacing, alignment, copy density, contrast, state polish.
@@ -108,6 +110,7 @@ Use `--strict-relative` when the target repository forbids local absolute paths 
 5. **Generate an image set**
    - Use the Codex image generation tool for bitmap outputs: design overview board, design-system sheet, each major screen, key states, and demo-page images.
    - Include the style policy and adjustment level in every image prompt.
+   - Use `design-model.yaml` for exact tokens, component provenance, icon rules, and screen mappings. Do not invent visual rules in prompts that are absent from the model or the markdown spec.
    - Generate images with realistic product data and the target viewport/device, not generic marketing art.
    - Keep image text short and also record all precise text/tokens in markdown because generated text may be imperfect.
    - If the image tool does not expose filesystem paths, do not pretend files were saved. Save available outputs through the app if possible, or ask the user to attach/export them before finalizing the pack.
@@ -120,6 +123,7 @@ Use `--strict-relative` when the target repository forbids local absolute paths 
 
 7. **Write the implementation contract**
    - Convert visual choices into concrete tokens, component specs, layout measurements, state rules, and page-by-page acceptance checks.
+   - Keep `design-model.yaml`, `02-design-system.md`, and `03-screen-specs.md` consistent. If a value changes in review, update the model first, then the human-readable docs.
    - Map designs onto existing code locations when a repository exists.
    - Generate `handoff-prompt.md` from `references/implementation-handoff.md`.
    - Replace template placeholders in markdown files instead of appending a second completed document below the scaffold.
@@ -130,7 +134,7 @@ Read `references/image-generation-playbook.md` before the first image generation
 
 When the user asks to implement an existing pack:
 
-1. Read every image and markdown file in the pack before editing code.
+1. Read `design-model.yaml`, every image, and every markdown file in the pack before editing code.
 2. Capture the current app with browser, simulator, or device screenshots and mock data.
 3. Build a small demo/prototype first when the design direction is broad, ambiguous, or risky. Use the fastest faithful platform surface and screenshots to compare the demo with the target images.
 4. Create an implementation plan that starts with screen/region segmentation, then global structure/tokens, shared components, page-level details, and verification evidence.
@@ -154,6 +158,7 @@ When revising a previous pack:
 Before declaring the pack complete:
 
 - Every generated final image has a matching row in `manifest.json`.
+- `design-model.yaml` exists, is referenced by `manifest.json`, and names the style policy, adjustment level, token set, component provenance, screen mappings, and implementation constraints.
 - `ui-spec.md` exists and states whether the design preserves the original style or intentionally changes it.
 - `00-brief.md` states the adjustment level and why that level fits the request.
 - Every important current page or intended new page has a spec in `03-screen-specs.md`.
@@ -167,6 +172,7 @@ Before declaring the pack complete:
 ## References
 
 - `references/research-notes.md`: prior art and design-to-code lessons from public tools and papers.
+- `references/design-model.md`: structured design-model schema, provenance rules, icon fallback guidance, and screen mapping.
 - `references/image-to-code-workflow.md`: implementation loop from image target to code, including segmentation and visual verification.
 - `references/pack-schema.md`: package directory and markdown structure.
 - `references/existing-project-playbook.md`: repository discovery, screen inventory, and screenshot capture guidance for existing apps.

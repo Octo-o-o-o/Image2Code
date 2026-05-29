@@ -11,6 +11,7 @@ from pathlib import Path
 
 REQUIRED_FILES = [
     "manifest.json",
+    "design-model.yaml",
     "ui-spec.md",
     "00-brief.md",
     "01-current-state.md",
@@ -28,6 +29,7 @@ REQUIRED_MANIFEST_FIELDS = [
     "platform",
     "created_at",
     "status",
+    "design_model",
     "viewport_targets",
     "source_context",
     "final_images",
@@ -58,6 +60,19 @@ PLACEHOLDER_PATTERNS = [
 ]
 
 ABSOLUTE_PATH_PATTERN = re.compile(r"(?<!\w)/(?:Users|home|tmp|var|private)/[^\s)`>]+")
+
+REQUIRED_DESIGN_MODEL_KEYS = [
+    "style_policy:",
+    "adjustment_level:",
+    "source_provenance:",
+    "visual_direction:",
+    "tokens:",
+    "components:",
+    "iconography:",
+    "hero_or_stage:",
+    "screens:",
+    "implementation_constraints:",
+]
 
 
 def parse_args() -> argparse.Namespace:
@@ -100,6 +115,8 @@ def read_text(path: Path) -> str:
 
 def referenced_paths(manifest: dict[str, object]) -> list[str]:
     paths: list[str] = []
+    if isinstance(manifest.get("design_model"), str):
+        paths.append(manifest["design_model"])
     for item in manifest.get("final_images", []) or []:
         if isinstance(item, dict) and isinstance(item.get("path"), str):
             paths.append(item["path"])
@@ -138,6 +155,23 @@ def main() -> None:
             manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         except json.JSONDecodeError as exc:
             errors.append(f"manifest.json is invalid JSON: {exc}")
+
+    design_model_path = pack / "design-model.yaml"
+    if design_model_path.exists():
+        design_model_text = read_text(design_model_path)
+        for key in REQUIRED_DESIGN_MODEL_KEYS:
+            if key not in design_model_text:
+                errors.append(f"design-model.yaml missing required key: {key}")
+        if "source:" not in design_model_text:
+            warnings.append("design-model.yaml should record component source values")
+        if re.search(r"level:\s*null\b", design_model_text):
+            warnings.append("design-model.yaml adjustment level is unset")
+        if re.search(r"source:\s*[\"']{2}", design_model_text):
+            warnings.append("design-model.yaml contains empty component source values")
+        if re.search(r"summary:\s*[\"']{2}", design_model_text):
+            warnings.append("design-model.yaml visual direction summary is empty")
+        if args.strict_relative and ABSOLUTE_PATH_PATTERN.search(design_model_text):
+            errors.append("design-model.yaml contains local absolute filesystem paths")
 
     for markdown_path in sorted(pack.glob("*.md")):
         text = read_text(markdown_path)

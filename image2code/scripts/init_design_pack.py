@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 from datetime import datetime
 from pathlib import Path
@@ -150,6 +151,13 @@ DOC_TEMPLATES = {
 
 -
 
+## Design Model Mapping
+
+- Structured source: design-model.yaml
+- Token/component decisions that preserve current UI:
+- Token/component decisions intentionally changed:
+- Components marked observed/derived/new:
+
 ## States
 
 -
@@ -220,6 +228,57 @@ DOC_TEMPLATES = {
 -
 """,
 }
+
+DESIGN_MODEL_TEMPLATE = """project: "{project}"
+mode: "{mode}"
+platform: "{platform}"
+style_policy:
+  preserve_existing: true
+  requested_change: ""
+adjustment_level:
+  level: null
+  rationale: ""
+source_provenance:
+  repo_context: ""
+  screenshots: []
+  source_files: []
+  external_references: []
+visual_direction:
+  summary: ""
+  product_fit: ""
+  primary_tension: ""
+tokens:
+  colors:
+    background: ""
+    surface: ""
+    text_primary: ""
+    text_secondary: ""
+    accent: ""
+    border: ""
+  typography:
+    display: ""
+    body: ""
+    mono: ""
+  spacing: {{}}
+  radii: {{}}
+  elevation: {{}}
+  motion: {{}}
+components:
+  primary_button:
+    source: ""
+    evidence: []
+    tokens: {{}}
+    rationale: ""
+iconography:
+  observed_style: {{}}
+  implementation_kit: {{}}
+hero_or_stage:
+  applies: false
+  reason: ""
+screens: []
+implementation_constraints: []
+viewport_targets: {viewports}
+"""
 
 TEMPLATE_NOTE = (
     "<!-- Fill this scaffold in place, delete unused prompts, and do not append "
@@ -329,10 +388,8 @@ def capture_guidance(platform: str) -> str:
 
 def path_label(path: Path, base: Path | None = None) -> str:
     if base:
-        try:
-            return str(path.relative_to(base)) or "."
-        except ValueError:
-            pass
+        relative = os.path.relpath(path, base)
+        return "." if relative == "." else relative
     return str(path)
 
 
@@ -354,7 +411,8 @@ def pack_label(
     if explicit_label:
         return explicit_label
     if relative_paths and repo:
-        return path_label(pack_dir, Path(repo).expanduser().resolve())
+        relative = path_label(pack_dir, Path(repo).expanduser().resolve())
+        return "." if relative.startswith("..") else relative
     return str(pack_dir)
 
 
@@ -365,7 +423,8 @@ def handoff_prompt(
 ) -> str:
     return f"""# Implementation Handoff Prompt
 
-I have a complete image-based UI design pack at {pack_display}. Please read every markdown file and every image in that folder before editing code.
+I have a complete image-based UI design pack at {pack_display}
+Please read design-model.yaml, every markdown file, and every image in that folder before editing code.
 
 Target project: {repo_display}
 Target platform: {platform}
@@ -422,6 +481,15 @@ def main() -> None:
 
     for filename, content in DOC_TEMPLATES.items():
         (pack_dir / filename).write_text(TEMPLATE_NOTE + content, encoding="utf-8")
+    (pack_dir / "design-model.yaml").write_text(
+        DESIGN_MODEL_TEMPLATE.format(
+            project=args.project.replace('"', '\\"'),
+            mode=args.mode,
+            platform=args.platform.replace('"', '\\"'),
+            viewports=json.dumps(viewports),
+        ),
+        encoding="utf-8",
+    )
     (pack_dir / "handoff-prompt.md").write_text(
         handoff_prompt(args.platform, repo_display, pack_display),
         encoding="utf-8",
@@ -433,6 +501,7 @@ def main() -> None:
         "platform": args.platform,
         "created_at": datetime.now().isoformat(timespec="seconds"),
         "status": args.status,
+        "design_model": "design-model.yaml",
         "viewport_targets": viewports,
         "source_context": {
             "repo": repo_display if args.repo or args.repo_label else "",

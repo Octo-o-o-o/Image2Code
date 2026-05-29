@@ -25,6 +25,7 @@ Style policy: [preserve existing UI spec by default, or explicit style-change di
 Adjustment level: [Level 1 polish / Level 2 UI refresh / Level 3 layout refactor / Level 4 architecture refactor].
 Layout: [navigation, grid, major regions, component hierarchy].
 Visual system: [palette, type, spacing, density, radius, icon style].
+Design model: [cite the relevant design-model.yaml tokens/components/screens and any observed/derived/new component constraints].
 Content: [realistic data and labels; keep text short and readable].
 States: [default/empty/error/loading/etc.].
 Implementation constraints: [existing framework/components, avoid impossible effects].
@@ -34,6 +35,8 @@ Output: single clean UI screenshot/prototype, no browser chrome unless explicitl
 For existing UI redesigns, include what must remain recognizable: route names, product vocabulary, critical workflows, and current data density.
 
 If the user did not explicitly ask for a new style, prompts must inherit the current `ui-spec.md` visual language. Do not use unrelated trends, palettes, or decorative systems just because the user asked for a redesign.
+
+When `design-model.yaml` exists, prompts must use it as the exact source for tokens, component provenance, icon rules, and screen mappings. If a prompt needs a visual rule not yet in the model, update the model and markdown spec first.
 
 ## Iteration Prompts
 

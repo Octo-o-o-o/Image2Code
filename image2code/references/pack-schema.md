@@ -7,6 +7,7 @@ Use this reference when creating, revising, or auditing a design pack.
 ```text
 docs/image2code/<YYYYMMDD-HHMM>-<project-slug>/
   manifest.json
+  design-model.yaml
   ui-spec.md
   00-brief.md
   01-current-state.md
@@ -38,6 +39,7 @@ Use relative paths from the pack root.
   "created_at": "YYYY-MM-DDTHH:MM:SS",
   "platform": "desktop|web|ios|android|native|mobile|cross-platform",
   "status": "draft|ready|reviewed|final|implemented",
+  "design_model": "design-model.yaml",
   "viewport_targets": ["desktop-1440x900"],
   "source_context": {
     "repo": "/absolute/path",
@@ -64,7 +66,15 @@ Use relative paths from the pack root.
 }
 ```
 
-## Markdown File Requirements
+## File Requirements
+
+`design-model.yaml`:
+
+- Structured source of truth for style policy, adjustment level, design provenance, tokens, components, iconography, optional hero/stage treatment, screen mapping, and implementation constraints.
+- Important components use `source: observed|derived|new` with evidence and rationale.
+- Token values match `02-design-system.md`; screen entries match `03-screen-specs.md`.
+- Icon fallback limitations are documented when the original icon set is proprietary or unavailable.
+- Read `references/design-model.md` before writing or revising it.
 
 `00-brief.md`:
 

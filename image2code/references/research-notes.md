@@ -9,6 +9,7 @@ This skill is not a replacement for a design-to-code product. It creates a struc
 - Uizard: generates designs from prompts or screenshots and can turn screenshots into editable mockups. Lesson: prompt/screenshot inputs are useful, but generated UI still needs a structured review and editable spec layer. Source: https://uizard.io/
 - Builder.io Visual Copilot: converts Figma designs to framework-specific code and emphasizes component mapping and style preferences. Lesson: implementation quality improves when the handoff maps visual design to existing components/framework constraints. Source: https://www.builder.io/blog/figma-to-code-visual-copilot
 - Figma Make: turns designs/prompts into functional prototypes and supports using design library context. Lesson: product style context and design-system rules should be first-class inputs, not afterthoughts. Source: https://www.figma.com/make/
+- `dominikmartn/hue`: generates reusable brand design-language skills from URLs, screenshots, or descriptions, with structured design models, token/component documentation, and HTML previews. Lesson: Image2Code should borrow structured design provenance and preview discipline, but keep its output project-specific rather than becoming a brand-skill generator. Source: https://github.com/dominikmartn/hue
 
 ## Relevant Research
 
@@ -24,4 +25,5 @@ This skill is not a replacement for a design-to-code product. It creates a struc
 - Generate multiple images: system, screens, states, responsive variants.
 - Segment large screenshots into implementation regions before coding.
 - Keep prompts and review logs for traceability.
+- Keep a structured design model so token, component, icon, and screen decisions have provenance instead of living only in prose or pixels.
 - Validate implementation by rendering the app, saving after-screenshots, and comparing them to the pack.

@@ -70,3 +70,13 @@ Map every visual decision to code before implementation:
 | --- | --- | --- | --- |
 
 Use this map to prevent image-only handoffs from becoming guesswork.
+
+## Component Provenance
+
+For every important reusable component in `design-model.yaml`, mark the decision as:
+
+- `observed`: directly found in existing screenshots, source files, UI specs, or design-system docs.
+- `derived`: inferred from observed primitives because the exact component did not exist.
+- `new`: intentionally introduced to satisfy the pack goal.
+
+Old-project redesigns should prefer `observed` and `derived`. Use `new` only when the current system lacks a pattern that the requested adjustment level allows.

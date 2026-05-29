@@ -9,6 +9,7 @@ The skill itself lives in [`image2code/`](./image2code/). The repository root co
 - Creates a structured pack under `docs/image2code/<timestamp>-<project>/`.
 - Captures repository UI context before design or implementation work.
 - Preserves the existing product style unless the user explicitly requests a style change.
+- Records a structured `design-model.yaml` so tokens, component provenance, icon choices, screen mappings, and implementation constraints stay auditable.
 - Supports web, desktop, mobile, iOS, Android, and other native app surfaces.
 - Records design prompts, review rounds, tokens, screen specs, implementation plan, and screenshot evidence.
 - Guides one-to-one implementation with before/after screenshots and visual-difference review.
@@ -120,6 +121,7 @@ python3 image2code/scripts/audit_design_pack.py \
 ```text
 docs/image2code/<YYYYMMDD-HHMM>-<project-slug>/
   manifest.json
+  design-model.yaml
   ui-spec.md
   00-brief.md
   01-current-state.md
@@ -137,7 +139,7 @@ docs/image2code/<YYYYMMDD-HHMM>-<project-slug>/
   implementation-screenshots/
 ```
 
-Generated images are visual targets, not the full source of truth. The markdown spec must capture exact text, tokens, spacing, states, accessibility, and implementation constraints because generated image text and pixel details can be imperfect.
+Generated images are visual targets, not the full source of truth. `design-model.yaml` and the markdown spec must capture exact text, tokens, spacing, states, accessibility, and implementation constraints because generated image text and pixel details can be imperfect.
 
 ## Validate
 

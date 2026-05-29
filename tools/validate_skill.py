@@ -61,7 +61,10 @@ def validate_pack_scripts() -> None:
             ]
         )
         require(pack / "implementation-screenshots")
+        require(pack / "design-model.yaml")
         manifest = json.loads((pack / "manifest.json").read_text(encoding="utf-8"))
+        if manifest["design_model"] != "design-model.yaml":
+            raise SystemExit("manifest should reference design-model.yaml")
         if manifest["source_context"]["repo"] != ".":
             raise SystemExit("--relative-paths should write repo label as '.'")
         if manifest["implementation"]["target_repo"] != ".":

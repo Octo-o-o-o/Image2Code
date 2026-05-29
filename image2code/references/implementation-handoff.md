@@ -3,7 +3,8 @@
 Use this template for `handoff-prompt.md`. Replace bracketed placeholders with actual paths and project details.
 
 ```text
-I have a complete image-based UI design pack at [ABSOLUTE_PACK_PATH]. Please read every markdown file and every image in that folder before editing code. Pay special attention to ui-spec.md, the style policy, and the adjustment level.
+I have a complete image-based UI design pack at [ABSOLUTE_PACK_PATH]
+Please read design-model.yaml, every markdown file, and every image in that folder before editing code. Pay special attention to ui-spec.md, the style policy, the adjustment level, component provenance, and implementation constraints.
 
 Target project: [ABSOLUTE_REPO_PATH]
 Target platform: [PLATFORM_AND_VIEWPORTS]
@@ -39,6 +40,7 @@ The generated handoff prompt must include:
 - Absolute design pack path.
 - Absolute repo path when known.
 - Instruction to read images and markdown first.
+- Instruction to read design-model.yaml as the structured source for tokens, component provenance, screen mappings, and constraints.
 - Browser/simulator/device screenshot comparison workflow.
 - Mock data instruction.
 - Demo-first instruction when appropriate.
