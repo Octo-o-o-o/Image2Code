@@ -1,6 +1,6 @@
 ---
 name: image2code
-description: Create complete image-led UI design packs and implementation handoffs for web, desktop, mobile, and native apps. Use when Codex should act like a product UI designer and UI engineer: gather screenshots and repository context, generate multiple Codex image mockups, review and refine them, write a code-ready markdown spec, save everything inside the project, or implement an existing image pack with browser/simulator/device screenshots, mock data, visual comparison, and iterative UI refactoring. Trigger for requests about Image2Code, "设计稿", "界面重构", "视觉重构", image-based design specs, screenshot-to-redesign workflows, new product UI concepts, old project UI modernization from screenshots, iPad/iPhone/native app UI polish, or one-to-one implementation from generated design images.
+description: Create complete image-led UI design packs, screenshot-to-HTML prototypes, and implementation handoffs for web, desktop, mobile, and native apps. Use when Codex should act like a product UI designer and UI engineer: gather screenshots and repository context, generate multiple Codex image mockups, review and refine them, write a code-ready markdown spec, save everything inside the project, implement an existing image pack with browser/simulator/device screenshots, or convert one or more images/screenshots into a high-fidelity HTML/CSS/JS prototype with component naming and visual verification. Trigger for requests about Image2Code, image2HTML, screenshot-to-HTML, "图片转HTML", "设计稿", "界面重构", "视觉重构", image-based design specs, screenshot-to-redesign workflows, new product UI concepts, old project UI modernization from screenshots, iPad/iPhone/native app UI polish, or one-to-one implementation from generated design images.
 ---
 
 # Image2Code
@@ -11,13 +11,16 @@ Use this skill to turn a product brief, existing UI screenshots, or a codebase i
 
 ## Decision Tree
 
+- If the user asks to convert screenshots/images directly into an HTML/CSS/JS prototype, a single unified HTML file, or mentions image2HTML/screenshot-to-HTML, run **Image2HTML Prototype Mode**.
 - If the user asks for new designs, redesigns, visual exploration, or a designer-quality package, run **Design Pack Mode**.
 - If the user points to an existing pack and asks to build it into a project, run **Implementation Mode**.
 - If the user asks to revise a prior pack, run **Revision Mode** and preserve the existing pack history.
 
 Do not skip context gathering for old projects. Existing UI, routing, component libraries, data density, and current screenshots are constraints, not optional inspiration.
 
-## Output Contract
+## Design Pack Output Contract
+
+This contract applies to Design Pack Mode, Implementation Mode, and Revision Mode. For direct screenshot-to-HTML prototype requests, use Image2HTML Prototype Mode and `references/image-to-html-prototype.md`; do not create a full design pack unless the user asks for one.
 
 Default to `docs/image2code/<YYYYMMDD-HHMM>-<project-slug>/` inside the target project unless the user names a folder. Use `scripts/init_design_pack.py` to create the structure:
 
@@ -134,6 +137,18 @@ Use `--strict-relative` when the target repository forbids local absolute paths 
 
 Read `references/image-generation-playbook.md` before the first image generation round.
 
+## Image2HTML Prototype Mode
+
+When the user asks for a high-fidelity HTML prototype from one or more screenshots:
+
+1. Read `references/image-to-html-prototype.md` before writing code.
+2. Inspect every source image first. Record dimensions, aspect ratio, screen inventory, shared design language, and which regions repeat across images.
+3. Define the fidelity contract before coding: target viewport, whether the source image is a full viewport or scrollable capture, allowed deviation, output file(s), component naming convention, and whether source images may be embedded. Default: do not embed source screenshots in the prototype except as hidden/debug references explicitly requested by the user.
+4. Build from shared tokens and named components, not from pasted screenshots. Prefer a single shell and screen-specific regions when multiple screenshots share a product system.
+5. Render the prototype in a browser at the matched viewport. Capture implementation screenshots for every source image.
+6. Compare source and implementation screenshots for viewport fit, unexpected scroll, missing regions, typography/spacing drift, color/radius drift, and component order. Iterate on the HTML/CSS until remaining differences are written down.
+7. Run `scripts/audit_html_prototype.py` when applicable to check source-image embedding, component naming, screen counts, and source/implementation screenshot aspect ratios. Use browser automation for runtime overflow and active-state checks.
+
 ## Implementation Mode
 
 When the user asks to implement an existing pack:
@@ -173,11 +188,13 @@ Before declaring the pack complete:
 - The handoff prompt is self-contained and points to the pack path. Use absolute paths by default; use relative paths when the target repository's documentation rules forbid local absolute paths.
 - `scripts/audit_design_pack.py` passes, using `--strict-relative` when the project requires relative documentation links.
 - Implementation work records reference screenshots, actual screenshots, observed differences, and final decisions in `06-implementation-plan.md`.
+- Image2HTML prototype work records source dimensions, target viewport, implementation screenshots, component inventory/naming, source-image embedding decision, runtime overflow checks, and a mismatch log before being called high fidelity.
 
 ## References
 
 - `references/research-notes.md`: prior art and design-to-code lessons from public tools and papers.
 - `references/design-model.md`: structured design-model schema, provenance rules, icon fallback guidance, and screen mapping.
+- `references/image-to-html-prototype.md`: direct screenshot/image-to-HTML prototype workflow, naming contract, verification loop, and fidelity gates.
 - `references/image-to-code-workflow.md`: implementation loop from image target to code, including segmentation and visual verification.
 - `references/pack-schema.md`: package directory and markdown structure.
 - `references/existing-project-playbook.md`: repository discovery, screen inventory, and screenshot capture guidance for existing apps.
