@@ -158,15 +158,22 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def should_skip(path: Path) -> bool:
+def should_skip(path: Path, root: Path) -> bool:
+    # Judge only the path portion inside the repository so that a repository
+    # living under a hidden or keyword-named directory is not skipped wholesale.
+    try:
+        relative = path.relative_to(root)
+    except ValueError:
+        relative = path
+    parts = relative.parts
     if any(
         part in SKIP_DIRS or (part.startswith(".") and part not in {".", ".."})
-        for part in path.parts
+        for part in parts
     ):
         return True
-    path_text = str(path)
+    relative_text = str(relative)
     return any(
-        exclude and (exclude in path.parts or exclude in path_text)
+        exclude and (exclude in parts or exclude in relative_text)
         for exclude in EXTRA_EXCLUDES
     )
 
@@ -177,11 +184,11 @@ def iter_files(root: Path) -> Iterable[Path]:
         dirs[:] = [
             directory
             for directory in dirs
-            if not should_skip(current_path / directory)
+            if not should_skip(current_path / directory, root)
         ]
         for file_name in files:
             path = current_path / file_name
-            if should_skip(path):
+            if should_skip(path, root):
                 continue
             if path.suffix in TEXT_EXTENSIONS:
                 yield path
@@ -208,16 +215,29 @@ def find_named(root: Path, names: set[str], max_files: int) -> list[str]:
     return matches
 
 
+def iter_dirs(root: Path) -> Iterable[Path]:
+    # Same pruning as iter_files: never descend into node_modules/.git/dist —
+    # rglob-based traversal walks those trees even though results get filtered,
+    # which makes this script crawl on real Electron/Next.js repositories.
+    for current, dirs, _files in os.walk(root):
+        current_path = Path(current)
+        dirs[:] = [
+            directory
+            for directory in dirs
+            if not should_skip(current_path / directory, root)
+        ]
+        for directory in dirs:
+            yield current_path / directory
+
+
 def find_special_dirs(root: Path, max_files: int, suffixes: set[str] | None = None) -> list[str]:
     suffixes = suffixes or {".appiconset", ".colorset", ".xcassets", ".xcodeproj", ".xcworkspace"}
     matches: list[str] = []
-    for path in root.rglob("*"):
-        if len(matches) >= max_files:
-            break
-        if should_skip(path):
-            continue
-        if path.is_dir() and path.suffix in suffixes:
+    for path in iter_dirs(root):
+        if path.suffix in suffixes:
             matches.append(rel(path, root))
+            if len(matches) >= max_files:
+                break
     return sorted(dict.fromkeys(matches))[:max_files]
 
 
@@ -273,8 +293,11 @@ def find_style_files(root: Path, max_files: int) -> list[str]:
             or "designsystem" in path_parts
             or "design-system" in path_parts
             or lowered.endswith(("/styles.css", "/theme.swift", "/tokens.swift"))
-            or any(keyword in name for keyword in STYLE_PATH_KEYWORDS)
-            and path.suffix in {".css", ".scss", ".swift", ".ts", ".tsx", ".md", ".json"}
+            or (
+                # Keyword hits are the only branch gated by file extension.
+                any(keyword in name for keyword in STYLE_PATH_KEYWORDS)
+                and path.suffix in {".css", ".scss", ".swift", ".ts", ".tsx", ".md", ".json"}
+            )
         )
         if is_style:
             matches.append(relative_path)
@@ -284,9 +307,7 @@ def find_style_files(root: Path, max_files: int) -> list[str]:
 
 def package_summaries(root: Path, max_files: int) -> list[dict[str, object]]:
     summaries: list[dict[str, object]] = []
-    for path in sorted(root.rglob("package.json")):
-        if should_skip(path):
-            continue
+    for path in sorted(p for p in iter_files(root) if p.name == "package.json"):
         try:
             data = json.loads(read_text(path))
         except json.JSONDecodeError:

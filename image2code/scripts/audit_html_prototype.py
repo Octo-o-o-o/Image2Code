@@ -75,6 +75,8 @@ def read_jpeg_size(path: Path) -> tuple[int, int] | None:
             if len(length_bytes) != 2:
                 return None
             length = struct.unpack(">H", length_bytes)[0]
+            if length < 2:
+                return None
             if marker in {
                 b"\xc0",
                 b"\xc1",

@@ -153,7 +153,7 @@ def validate_html_prototype_script() -> None:
             ]
         )
     finally:
-        shutil.rmtree(html_dir, ignore_errors=True)
+        shutil.rmtree(tmp_root, ignore_errors=True)
 
 
 def main() -> None:

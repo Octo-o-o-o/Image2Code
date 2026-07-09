@@ -56,7 +56,8 @@ PLACEHOLDER_PATTERNS = [
     re.compile(r"^- Project:\s*$", re.MULTILINE),
     re.compile(r"^- Route:\s*$", re.MULTILINE),
     re.compile(r"\| High \|  \|  \|  \|"),
-    re.compile(r"\| Category \| Score \| Notes \|"),
+    # Score table header with a separator row but no data rows below it.
+    re.compile(r"\| Category \| Score \| Notes \|\s*\n\|[ :\-|]+\|\s*\n(?!\|)"),
 ]
 
 ABSOLUTE_PATH_PATTERN = re.compile(r"(?<!\w)/(?:Users|home|tmp|var|private)/[^\s)`>]+")

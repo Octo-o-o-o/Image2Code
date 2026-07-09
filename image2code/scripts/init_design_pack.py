@@ -338,7 +338,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--root",
         default="docs/image2code",
-        help="Root folder for design packs. Defaults to docs/image2code",
+        help=(
+            "Root folder for design packs. Defaults to docs/image2code. "
+            "A relative value resolves against --repo when given, otherwise "
+            "against the current working directory."
+        ),
     )
     parser.add_argument("--project", required=True, help="Human-readable project name")
     parser.add_argument(
@@ -496,7 +500,12 @@ When done, update {pack_display}/06-implementation-plan.md with what was impleme
 
 def main() -> None:
     args = parse_args()
-    root = Path(args.root).expanduser().resolve()
+    root = Path(args.root).expanduser()
+    if not root.is_absolute() and args.repo:
+        # Anchor the default/relative root inside the target repository so the
+        # pack is not silently created under an unrelated working directory.
+        root = Path(args.repo).expanduser().resolve() / root
+    root = root.resolve()
     timestamp = args.timestamp or datetime.now().strftime("%Y%m%d-%H%M")
     slug = slugify(args.slug or args.project)
     viewports = args.viewports or ["desktop-1440x900"]

@@ -1,6 +1,19 @@
 ---
 name: image2code
-description: Create complete image-led UI design packs, screenshot-to-HTML prototypes, and implementation handoffs for web, desktop, mobile, and native apps. Use when Codex should act like a product UI designer and UI engineer: gather screenshots and repository context, generate multiple Codex image mockups, review and refine them, write a code-ready markdown spec, save everything inside the project, implement an existing image pack with browser/simulator/device screenshots, or convert one or more images/screenshots into a high-fidelity HTML/CSS/JS prototype with component naming and visual verification. Trigger for requests about Image2Code, image2HTML, screenshot-to-HTML, "图片转HTML", "设计稿", "界面重构", "视觉重构", image-based design specs, screenshot-to-redesign workflows, new product UI concepts, old project UI modernization from screenshots, iPad/iPhone/native app UI polish, or one-to-one implementation from generated design images.
+description: >-
+  Create complete image-led UI design packs, screenshot-to-HTML prototypes,
+  and implementation handoffs for web, desktop, mobile, and native apps. Use
+  when Codex should act like a product UI designer and UI engineer — gather
+  screenshots and repository context, generate multiple Codex image mockups,
+  review and refine them, write a code-ready markdown spec, save everything
+  inside the project, implement an existing image pack with
+  browser/simulator/device screenshots, or convert one or more
+  images/screenshots into a high-fidelity HTML/CSS/JS prototype with component
+  naming and visual verification. Trigger for requests about Image2Code,
+  image2HTML, screenshot-to-HTML, "图片转HTML", "设计稿", "界面重构", "视觉重构",
+  image-based design specs, screenshot-to-redesign workflows, new product UI
+  concepts, old project UI modernization from screenshots, iPad/iPhone/native
+  app UI polish, or one-to-one implementation from generated design images.
 ---
 
 # Image2Code
@@ -120,6 +133,7 @@ Use `--strict-relative` when the target repository forbids local absolute paths 
    - Generate images with realistic product data and the target viewport/device, not generic marketing art.
    - Keep image text short and also record all precise text/tokens in markdown because generated text may be imperfect.
    - If the image tool does not expose filesystem paths, do not pretend files were saved. Save available outputs through the app if possible, or ask the user to attach/export them before finalizing the pack.
+   - If the host has no image generation tool at all, say so explicitly and degrade instead of failing: keep the full pack contract but produce the visual targets as hand-written SVG or self-contained HTML mock screens rendered and screenshotted at the target viewport, record `generator: manual-svg|html-mock` in `design-model.yaml`, and note in `05-review-log.md` that bitmap targets can be regenerated later on a host with image generation.
 
 6. **Review and refine**
    - Run at least two critique passes unless the user explicitly asks for a quick draft.
